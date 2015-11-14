@@ -13,6 +13,13 @@ class ViewController: UIViewController {
     let e3: Double = pow(M_E, 3.0)
     var i = 0.0
     var timer: NSTimer =  NSTimer()
+    var totalSeconds: Double = 0.0
+    var eventPullingIntervalSeconds: Double = 0.0
+    var enentPullingProgressPercentage: Double = 0.0
+    var afterHowManyTimerCountsPullEventOnce: Double = 0.0
+    var factor: Double = 1.0
+    
+    var startTime: NSDate = NSDate()
     
     @IBOutlet weak var totalTime: UITextField!
     @IBOutlet weak var refreshInterval: UITextField!
@@ -20,16 +27,28 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
 
     @IBAction func startButtonPressed(sender: UIButton) {
+        //let totalSeconds: Double = Double(totalTime.text!)!
+        //let eventPullingIntervalSeconds: Double = Double(refreshInterval.text!)!
+        
+        totalSeconds = 200.0;
+        eventPullingIntervalSeconds = 30.0
+        enentPullingProgressPercentage = eventPullingIntervalSeconds / totalSeconds
         percentage.text = "0%"
         self.counter = 0
-        for  _ in 1...100 {
-            let time = dispatch_time(dispatch_time_t(DISPATCH_TIME_NOW), 2 * Int64(NSEC_PER_SEC))
-            
-            dispatch_after(time, dispatch_get_main_queue()) {
-                
-                self.counter++
-            }
-        }
+        
+        //This program sets progress bar each time updates 1% of the total wait time
+        //If the total wait time is 400 seconds, then after each 4 seconds, the NSTimer
+        //will fire the "timerRun()" function once to update the bar and the percentage UILabel
+        let secondsOfOnePercentProgress = totalSeconds / 100
+        
+        //The number of event pulling operation is not the same as NSTimer fires the "timerRun" function
+        //Based on the following formular, there is a relationship between how often the event pulling
+        //operation should be performed and how many secnonds are there in 1% of the total wait time
+        afterHowManyTimerCountsPullEventOnce = eventPullingIntervalSeconds / secondsOfOnePercentProgress
+        
+        startTime = NSDate()
+        
+        timer = NSTimer.scheduledTimerWithTimeInterval(secondsOfOnePercentProgress, target: self, selector: "timerRun", userInfo: nil, repeats: true)
     }
     
     var counter:Int = 0 {
@@ -42,30 +61,30 @@ class ViewController: UIViewController {
     }
     
     func timerRun() {
-        let refreshInterval: Double = 1
-        let totalMinutes: Double = 15
+        //increment counter variable will trigger the counter "didSet property method"
+        self.counter++
         
+        if factor >= floor(afterHowManyTimerCountsPullEventOnce) {
+            i = i + enentPullingProgressPercentage
+            doTimeCalculation(i)
+            factor = 1.0
+        }
+        factor++
         
-        let percentage : Double = refreshInterval / totalMinutes
-        //var exp : Double = 0.0
-        
-        //for var i = 0.0; i <= 1; i+=percentage {
-        
-        //}
-        i = i + percentage
-        perform(i)
+        if abs(startTime.timeIntervalSinceNow) > totalSeconds {
+            timer.invalidate()
+        }
     }
     
-    func perform(i: Double) {
-        let exp = 20.3444 * pow(i, 3.0) + 3
+    func doTimeCalculation(base: Double) {
+        let exp = 20.3444 * pow(base, 3.0) + 3
         print(pow(M_E, exp) - e3)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        timer = NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: "timerRun", userInfo: nil, repeats: true)
+        progressBar.setProgress(0, animated: true)
     }
 
     override func didReceiveMemoryWarning() {

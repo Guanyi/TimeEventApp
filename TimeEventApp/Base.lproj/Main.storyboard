@@ -57,7 +57,7 @@
                                 </constraints>
                                 <state key="normal" title="Stop"/>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="wpQ-Pp-boS">
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="wpQ-Pp-boS">
                                 <rect key="frame" x="284" y="988" width="200" height="2"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="new-AY-d8E"/>
