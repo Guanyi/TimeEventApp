@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Alamofire
+import SwiftyJSON
 
 class ViewController: UIViewController {
     
@@ -30,8 +32,8 @@ class ViewController: UIViewController {
         //let totalSeconds: Double = Double(totalTime.text!)!
         //let eventPullingIntervalSeconds: Double = Double(refreshInterval.text!)!
         
-        totalSeconds = 200.0;
-        eventPullingIntervalSeconds = 30.0
+        totalSeconds = 100.0;
+        eventPullingIntervalSeconds = 5.0
         enentPullingProgressPercentage = eventPullingIntervalSeconds / totalSeconds
         percentage.text = "0%"
         self.counter = 0
@@ -78,7 +80,37 @@ class ViewController: UIViewController {
     
     func doTimeCalculation(base: Double) {
         let exp = 20.3444 * pow(base, 3.0) + 3
-        print(pow(M_E, exp) - e3)
+        //print(pow(M_E, exp) - e3)
+        fetchWikiData("")
+    }
+    
+    func fetchWikiData(searchString: String) -> String {
+        //https://en.wikipedia.org//w/api.php?action=query&list=search&format=jsonfm&srsearch=1914&srwhat=text
+        
+        
+        //  /w/api.php?action=query&list=search&format=json&srsearch=year%202000000%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet
+        //https://en.wikipedia.org//w/api.php?action=query&list=search&format=jsonfm&srsearch=1914&srnamespace=4&srwhat=text&srprop=snippet
+        //https://api.mongolab.com/api/1/databases/firstmongo/collections/Student?apiKey=JosaVGrEGYbVAdO3q-WTOK6_mNvPOXoX
+        //http://services.odata.org/V4/Northwind/Northwind.svc/Customers
+        let request = Alamofire.request(.GET, "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=year%202000000%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet")
+            .responseJSON { response in
+                //print(response.request)  // original URL request
+                //print(response.response) // URL response
+                //print(response.data)     // server data
+                //print(response.result)   // result of response serialization
+                
+                if let value = response.result.value {
+                    //print("JSON: \(value)")
+                    var searchResultList = (JSON(value))["query"]["search"]
+                    print(searchResultList)
+                    //print(customerList[0, "CompanyName"])
+                    //for var i = 0; i < customerList.count; i++ {
+                    //    print(customerList[i, "CompanyName"])
+                   // }
+                    
+                }
+        }
+        return ""
     }
     
     override func viewDidLoad() {
