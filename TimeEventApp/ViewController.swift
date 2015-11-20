@@ -33,7 +33,7 @@ class ViewController: UIViewController {
         //let eventPullingIntervalSeconds: Double = Double(refreshInterval.text!)!
         
         totalSeconds = 100.0;
-        eventPullingIntervalSeconds = 5.0
+        eventPullingIntervalSeconds = 10.0
         enentPullingProgressPercentage = eventPullingIntervalSeconds / totalSeconds
         percentage.text = "0%"
         self.counter = 0
@@ -81,35 +81,65 @@ class ViewController: UIViewController {
     func doTimeCalculation(base: Double) {
         let exp = 20.3444 * pow(base, 3.0) + 3
         //print(pow(M_E, exp) - e3)
-        fetchWikiData("")
+        let yearInverval = pow(M_E, exp) - e3
+        let historyDate = NSDate().dateByAddingTimeInterval(-yearInverval * 86400)
+        print(historyDate)
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components([.Year, .Month, .Day], fromDate: historyDate)
+        //print(String(components.year) + " " + String(components.month) + " " + String(components.date))
+        var year: Int = components.year
+        var month: Int = components.month
+        //let originDate: NSDate = NSDate(timeIntervalSinceNow: -2016*365*86400)
+        //print("Origin:  \(originDate)")
+        //print(abs(historyDate.timeIntervalSinceNow) > 2016*365*86400)
+        if abs(historyDate.timeIntervalSinceNow) > 2016*365*86400
+        {
+            year = -year
+        }
+        
+        fetchWikiData(buildSearchString(year, month: month))
+    }
+    
+    func buildSearchString(var year: Int, month: Int)->String{
+        let searchStringFirstPart: String = "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch="
+        let serchStringSecondPart: String = "&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet"
+        var searchString: String = ""
+        if year > 0
+        {
+            searchString = searchStringFirstPart + "Year%20\(year)%20Month%20\(month)" + serchStringSecondPart
+        }
+        else
+        {
+            year = -year
+            searchString = searchStringFirstPart + "Year%20\(year)%20BC" + serchStringSecondPart
+        }
+        
+        return searchString
     }
     
     func fetchWikiData(searchString: String) -> String {
-        //https://en.wikipedia.org//w/api.php?action=query&list=search&format=jsonfm&srsearch=1914&srwhat=text
-        
-        
-        //  /w/api.php?action=query&list=search&format=json&srsearch=year%202000000%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet
-        //https://en.wikipedia.org//w/api.php?action=query&list=search&format=jsonfm&srsearch=1914&srnamespace=4&srwhat=text&srprop=snippet
-        //https://api.mongolab.com/api/1/databases/firstmongo/collections/Student?apiKey=JosaVGrEGYbVAdO3q-WTOK6_mNvPOXoX
-        //http://services.odata.org/V4/Northwind/Northwind.svc/Customers
-        let request = Alamofire.request(.GET, "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=year%202000000%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet")
+        //print(searchString)
+        //string is http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=year%201991%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet
+        let request = Alamofire.request(.GET, searchString)
             .responseJSON { response in
-                //print(response.request)  // original URL request
-                //print(response.response) // URL response
-                //print(response.data)     // server data
-                //print(response.result)   // result of response serialization
-                
                 if let value = response.result.value {
                     //print("JSON: \(value)")
                     var searchResultList = (JSON(value))["query"]["search"]
-                    print(searchResultList)
-                    //print(customerList[0, "CompanyName"])
-                    //for var i = 0; i < customerList.count; i++ {
-                    //    print(customerList[i, "CompanyName"])
-                   // }
-                    
+                    if searchResultList.count != 0
+                    {
+                        let randomIndex: Int = (Int)(arc4random()) % searchResultList.count
+                        print(searchResultList[randomIndex])
+                    }
+                    else
+                    {
+                        print("no result")
+                    }
                 }
         }
+        return ""
+    }
+    
+    func yearConverter(yearInDouble: Double)->String {
         return ""
     }
     
