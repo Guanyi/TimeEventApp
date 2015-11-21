@@ -131,7 +131,6 @@ class ViewController: UIViewController {
     }
 
     func fetchWikiData(searchString: String) {
-        //print(searchString)
         //string is http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=year%201991%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet
         
         var searchResult: String = ""
