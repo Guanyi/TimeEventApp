@@ -30,9 +30,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var progressBar: UIProgressView!
     @IBOutlet weak var textView: UITextView!
     
-    
     @IBAction func stopButtonPressed(sender: UIButton) {
         timer.invalidate()
+
     }
     
     @IBAction func startButtonPressed(sender: UIButton) {
