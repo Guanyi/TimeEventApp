@@ -56,6 +56,9 @@
                                     <constraint firstAttribute="height" constant="30" id="prC-mU-QB6"/>
                                 </constraints>
                                 <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="stopButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="b3v-v9-Hkm"/>
+                                </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="wpQ-Pp-boS">
                                 <rect key="frame" x="284" y="988" width="200" height="2"/>
@@ -70,38 +73,43 @@
                                     <constraint firstAttribute="height" constant="21" id="hx8-cO-E9y"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yn5-4j-42D">
-                                <rect key="frame" x="30" y="106" width="708" height="843"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
-                            </webView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Ob5-MR-0zi">
+                                <rect key="frame" x="25" y="101" width="718" height="853"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="uwi-vp-2zD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0lu-jV-Gcm"/>
-                            <constraint firstItem="ly1-eV-vtU" firstAttribute="top" secondItem="yn5-4j-42D" secondAttribute="bottom" constant="10" id="9Xz-vW-qcB"/>
+                            <constraint firstItem="Ob5-MR-0zi" firstAttribute="top" secondItem="HlJ-AX-0wt" secondAttribute="bottom" constant="5" id="77j-k0-rZO"/>
                             <constraint firstItem="wpQ-Pp-boS" firstAttribute="top" secondItem="ly1-eV-vtU" secondAttribute="bottom" constant="8" id="Cue-ND-Hzm"/>
                             <constraint firstItem="cFR-r8-SMs" firstAttribute="leading" secondItem="HlJ-AX-0wt" secondAttribute="trailing" constant="15" id="D9e-ff-a2T"/>
+                            <constraint firstItem="Ob5-MR-0zi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DSB-C5-4Au"/>
                             <constraint firstItem="uwi-vp-2zD" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="DkQ-Va-8CQ"/>
                             <constraint firstItem="4la-IC-kkb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="28" id="E0f-oD-2fa"/>
                             <constraint firstItem="HlJ-AX-0wt" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="FnF-st-Q6I"/>
                             <constraint firstItem="HlJ-AX-0wt" firstAttribute="top" secondItem="uwi-vp-2zD" secondAttribute="bottom" constant="8" id="GeD-hm-vjj"/>
                             <constraint firstItem="cFR-r8-SMs" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="28" id="Jij-e3-jFX"/>
-                            <constraint firstItem="yn5-4j-42D" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="10" id="TOk-Fb-oUa"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="yn5-4j-42D" secondAttribute="trailing" constant="10" id="V2n-J3-gpH"/>
+                            <constraint firstItem="Ob5-MR-0zi" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="5" id="SBX-KK-GGg"/>
+                            <constraint firstItem="ly1-eV-vtU" firstAttribute="top" secondItem="Ob5-MR-0zi" secondAttribute="bottom" constant="5" id="SuV-89-8Br"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="wpQ-Pp-boS" secondAttribute="bottom" constant="34" id="Xie-XN-QFg"/>
-                            <constraint firstItem="yn5-4j-42D" firstAttribute="top" secondItem="HlJ-AX-0wt" secondAttribute="bottom" constant="10" id="bXV-jg-7vR"/>
                             <constraint firstItem="wpQ-Pp-boS" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ctd-Xb-Ac0"/>
                             <constraint firstItem="HlJ-AX-0wt" firstAttribute="leading" secondItem="4la-IC-kkb" secondAttribute="trailing" constant="14" id="hs3-3D-Pn9"/>
                             <constraint firstItem="ly1-eV-vtU" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="j5O-Fa-ADP"/>
+                            <constraint firstItem="Ob5-MR-0zi" firstAttribute="centerX" secondItem="ly1-eV-vtU" secondAttribute="centerX" id="jcI-u4-6ey"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="percentage" destination="ly1-eV-vtU" id="FJN-GR-5Jz"/>
                         <outlet property="progressBar" destination="wpQ-Pp-boS" id="qZU-pV-D6g"/>
                         <outlet property="refreshInterval" destination="HlJ-AX-0wt" id="N6R-UQ-a6J"/>
+                        <outlet property="textView" destination="Ob5-MR-0zi" id="OEM-qf-dqC"/>
                         <outlet property="totalTime" destination="uwi-vp-2zD" id="pra-UP-B7W"/>
                     </connections>
                 </viewController>

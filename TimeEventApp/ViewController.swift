@@ -19,21 +19,29 @@ class ViewController: UIViewController {
     var eventPullingIntervalSeconds: Double = 0.0
     var enentPullingProgressPercentage: Double = 0.0
     var afterHowManyTimerCountsPullEventOnce: Double = 0.0
-    var factor: Double = 1.0
+    var factor: Double = 0.0
     
     var startTime: NSDate = NSDate()
+    var wikiSearchRecords:[String] = []
     
     @IBOutlet weak var totalTime: UITextField!
     @IBOutlet weak var refreshInterval: UITextField!
     @IBOutlet weak var percentage: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-
+    @IBOutlet weak var textView: UITextView!
+    
+    
+    @IBAction func stopButtonPressed(sender: UIButton) {
+        timer.invalidate()
+    }
+    
     @IBAction func startButtonPressed(sender: UIButton) {
-        //let totalSeconds: Double = Double(totalTime.text!)!
-        //let eventPullingIntervalSeconds: Double = Double(refreshInterval.text!)!
-        
-        totalSeconds = 100.0;
-        eventPullingIntervalSeconds = 10.0
+        wikiSearchRecords.removeAll()
+        i = 0.0
+        factor = 0.0
+        textView.text = ""
+        totalSeconds = Double(totalTime.text!)!
+        eventPullingIntervalSeconds = Double(refreshInterval.text!)!
         enentPullingProgressPercentage = eventPullingIntervalSeconds / totalSeconds
         percentage.text = "0%"
         self.counter = 0
@@ -49,10 +57,10 @@ class ViewController: UIViewController {
         afterHowManyTimerCountsPullEventOnce = eventPullingIntervalSeconds / secondsOfOnePercentProgress
         
         startTime = NSDate()
-        
+
         timer = NSTimer.scheduledTimerWithTimeInterval(secondsOfOnePercentProgress, target: self, selector: "timerRun", userInfo: nil, repeats: true)
     }
-    
+
     var counter:Int = 0 {
         didSet {
             let progress = Float(counter) / 100.0
@@ -61,7 +69,7 @@ class ViewController: UIViewController {
             percentage.text = ("\(counter)%")
         }
     }
-    
+
     func timerRun() {
         //increment counter variable will trigger the counter "didSet property method"
         self.counter++
@@ -69,37 +77,42 @@ class ViewController: UIViewController {
         if factor >= floor(afterHowManyTimerCountsPullEventOnce) {
             i = i + enentPullingProgressPercentage
             doTimeCalculation(i)
-            factor = 1.0
+            factor = 0.0
         }
         factor++
-        
-        if abs(startTime.timeIntervalSinceNow) > totalSeconds {
+
+        //when total amount of wait time passed, stop the timer
+        if abs(startTime.timeIntervalSinceNow) > totalSeconds && counter >= 100 {
             timer.invalidate()
         }
     }
-    
+
     func doTimeCalculation(base: Double) {
         let exp = 20.3444 * pow(base, 3.0) + 3
         //print(pow(M_E, exp) - e3)
         let yearInverval = pow(M_E, exp) - e3
-        let historyDate = NSDate().dateByAddingTimeInterval(-yearInverval * 86400)
+        let historyDate = NSDate().dateByAddingTimeInterval(-yearInverval * 86400 * 365)
         print(historyDate)
         let calendar = NSCalendar.currentCalendar()
         let components = calendar.components([.Year, .Month, .Day], fromDate: historyDate)
-        //print(String(components.year) + " " + String(components.month) + " " + String(components.date))
         var year: Int = components.year
-        var month: Int = components.month
-        //let originDate: NSDate = NSDate(timeIntervalSinceNow: -2016*365*86400)
-        //print("Origin:  \(originDate)")
-        //print(abs(historyDate.timeIntervalSinceNow) > 2016*365*86400)
+        let month: Int = components.month
         if abs(historyDate.timeIntervalSinceNow) > 2016*365*86400
         {
+            textView.text.appendContentsOf("\(year) BC\n")
             year = -year
+        }
+        else
+        {
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "YYYY-MM"
+            let historyDateString = dateFormatter.stringFromDate(historyDate)
+            textView.text.appendContentsOf(historyDateString+"\n")
         }
         
         fetchWikiData(buildSearchString(year, month: month))
     }
-    
+
     func buildSearchString(var year: Int, month: Int)->String{
         let searchStringFirstPart: String = "http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch="
         let serchStringSecondPart: String = "&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet"
@@ -116,44 +129,42 @@ class ViewController: UIViewController {
         
         return searchString
     }
-    
-    func fetchWikiData(searchString: String) -> String {
+
+    func fetchWikiData(searchString: String) {
         //print(searchString)
         //string is http://en.wikipedia.org/w/api.php?action=query&list=search&format=json&srsearch=year%201991%20BC&srwhat=text&srinfo=suggestion&srprop=snippet%7Csectionsnippet
-        let request = Alamofire.request(.GET, searchString)
+        
+        var searchResult: String = ""
+        let _ = Alamofire.request(.GET, searchString)
             .responseJSON { response in
                 if let value = response.result.value {
-                    //print("JSON: \(value)")
                     var searchResultList = (JSON(value))["query"]["search"]
                     if searchResultList.count != 0
                     {
                         let randomIndex: Int = (Int)(arc4random()) % searchResultList.count
-                        print(searchResultList[randomIndex])
+                        searchResult = (String)(searchResultList[randomIndex])
+                        self.textView.text.appendContentsOf(searchResult+"\n")
                     }
                     else
                     {
-                        print("no result")
+                        self.textView.text.appendContentsOf("no result\n")
                     }
+                    self.textView.text.appendContentsOf("-----------------------------------------------\n")
                 }
         }
-        return ""
-    }
-    
-    func yearConverter(yearInDouble: Double)->String {
-        return ""
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         progressBar.setProgress(0, animated: true)
+        textView.text = ""
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
 
 }
 
